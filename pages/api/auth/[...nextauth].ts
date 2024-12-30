@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+//import Google from "next-auth/providers/google";
 
 import GoogleProvider from "next-auth/providers/google"
 
