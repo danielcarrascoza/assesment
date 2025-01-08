@@ -9,6 +9,31 @@ export default function Login() {
   const [formData, setFormData] = useState({ location: "", phonenumber: "" });
   const [formVisible, setFormVisible] = useState(false);
 
+  const [inputValue, setInputValue] = useState(session?.user?.name);
+
+
+ const handleChange = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    setInputValue(event.currentTarget.value);
+    const response = await fetch(`/api/user?email=${session?.user?.email}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: session?.user?.email,
+          name: inputValue,
+          location: formData.location,
+          phonenumber: formData.phonenumber
+        })
+    });
+    if (response.ok) {
+        const updatedUser = await response.json();
+        setUserDetails(updatedUser);
+    }
+    else console.error("Failed to update user:", await response.json());
+};
+
+
+
+
   const fetchUser = async () => {
     if (!session?.user?.email) return;
 
@@ -71,7 +96,12 @@ export default function Login() {
   if (session) {
     return (
       <>
-        <h3>Welcome, {session?.user?.name || "User"}!</h3>
+        <h3>Welcome, {inputValue}</h3>
+        <input
+        value = {inputValue??' '}
+        onChange={(e) => setInputValue(e.target.value)}
+        />
+        <button onClick={handleChange}> save </button>
         {formVisible ? (
           <form onSubmit={handleFormSubmit}>
             <div>

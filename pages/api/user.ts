@@ -24,7 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const existingUser = await prisma.user.findUnique({ where: { email } });
       if (existingUser) {
+        
         return res.status(200).json(existingUser);
+
       }
 
       const newUser = await prisma.user.create({
@@ -32,6 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           name,
           email,
         },
+
+
       });
 
       res.status(201).json(newUser);
@@ -40,12 +44,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(500).json({ message: "Internal server error" });
     }
   } if (req.method === "PATCH") {
-    const { email, location, phonenumber } = req.body;
+    const { name, email, location, phonenumber } = req.body;
   
     try {
       const updatedUser = await prisma.user.update({
         where: { email },
-        data: { location, phonenumber},
+        data: { name, location, phonenumber},
       });
   
       res.status(200).json(updatedUser);
